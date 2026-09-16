@@ -1,0 +1,8 @@
+* text=auto eol=lf
+
+*.sln        text eol=crlf
+*.csproj     text eol=crlf
+*.sh         text eol=lf
+*.jpeg       binary
+*.png        binary
+*.db         binary
