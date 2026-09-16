@@ -13,8 +13,8 @@ publish/
 .idea/
 
 # Dados locais
-data/
-*.db
+/data/
+/*.db
 *.db-shm
 *.db-wal
 
