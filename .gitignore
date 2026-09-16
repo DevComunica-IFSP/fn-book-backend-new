@@ -1,0 +1,23 @@
+# Build
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+*.user
+*.suo
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# Dados locais
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Ambiente
+.env
+*.log

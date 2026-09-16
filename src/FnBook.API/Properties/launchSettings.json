@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "FnBook.API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:62230;http://localhost:62231"
+    }
+  }
+}
