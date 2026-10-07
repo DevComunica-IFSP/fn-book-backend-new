@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<News> News => Set<News>();
+    public DbSet<NewsOrigin> NewsOrigins => Set<NewsOrigin>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +22,22 @@ public class AppDbContext : DbContext
             entity.Property(u => u.Name).HasMaxLength(200).IsRequired();
             entity.Property(u => u.Email).HasMaxLength(255).IsRequired();
             entity.Property(u => u.PasswordHash).HasMaxLength(500).IsRequired();
+        });
+
+        modelBuilder.Entity<NewsOrigin>(entity =>
+        {
+            entity.ToTable("Origem");
+            entity.HasKey(o => o.OrigemId);
+            entity.Property(o => o.OrigemId).HasColumnName("origem_id");
+            entity.Property(o => o.NewsId).HasColumnName("noticia_id");
+            entity.Property(o => o.UserId).HasColumnName("usuario_id");
+            entity.Property(o => o.UfId).HasColumnName("uf_id");
+            entity.Property(o => o.Date).HasColumnName("data");
+            entity.HasIndex(o => o.NewsId);
+            entity.HasIndex(o => o.UserId);
+            entity.HasIndex(o => o.UfId);
+            entity.HasOne<News>().WithMany().HasForeignKey(o => o.NewsId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<User>().WithMany().HasForeignKey(o => o.UserId).OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<News>(entity =>

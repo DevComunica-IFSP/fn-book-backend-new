@@ -20,6 +20,8 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INewsRepository, NewsRepository>();
         services.AddScoped<INewsService, NewsService>();
+        services.AddScoped<INewsOriginRepository, NewsOriginRepository>();
+        services.AddScoped<INewsOriginService, NewsOriginService>();
 
         return services;
     }
