@@ -16,11 +16,22 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.ToTable("Usuario");
+
             entity.HasKey(u => u.Id);
             entity.HasIndex(u => u.Email).IsUnique();
-            entity.Property(u => u.Name).HasMaxLength(200).IsRequired();
-            entity.Property(u => u.Email).HasMaxLength(255).IsRequired();
-            entity.Property(u => u.PasswordHash).HasMaxLength(500).IsRequired();
+
+            entity.Property(u => u.Id).HasColumnName("usuario_id");
+            entity.Property(u => u.Name).HasColumnName("nome_completo").HasMaxLength(200).IsRequired();
+            entity.Property(u => u.Email).HasColumnName("email").HasMaxLength(255).IsRequired();
+            entity.Property(u => u.PasswordHash).HasColumnName("senha").HasMaxLength(500).IsRequired();
+            entity.Property(u => u.ProfilePicture).HasColumnName("foto_perfil").HasMaxLength(500);
+            entity.Property(u => u.StateId).HasColumnName("uf_id");
+            entity.Property(u => u.UserType).HasColumnName("tipo_usuario").HasMaxLength(50).IsRequired();
+            entity.Property(u => u.ContributorScore).HasColumnName("score_contribuidor").HasDefaultValue(0);
+            entity.Property(u => u.IsActive).HasColumnName("ativo").HasDefaultValue(true);
+            entity.Property(u => u.CreatedAt).HasColumnName("data_cadastro");
+            entity.Property(u => u.UpdatedAt).HasColumnName("data_atualizacao");
         });
 
         modelBuilder.Entity<News>(entity =>
