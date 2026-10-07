@@ -22,6 +22,7 @@ src/
 ```bash
 dotnet restore FnBook.sln
 dotnet build FnBook.sln
+dotnet tool restore
 dotnet run --project src/FnBook.API
 ```
 
@@ -34,6 +35,16 @@ docker compose up --build -d
 API em `http://localhost:5000` (container escuta em 8080). Swagger em `http://localhost:5000/swagger`.
 
 O banco SQLite fica em `./data/fnbook.db`, montado como volume em `/app/data`.
+A API aplica as migrações do EF Core ao iniciar. Para criar novas migrações, execute:
+
+```bash
+dotnet tool restore
+dotnet ef migrations add NomeDaMudanca --project src/FnBook.Infrastructure --startup-project src/FnBook.API --output-dir Data/Migrations
+```
+
+Se você já tinha um banco de testes criado com `EnsureCreated`, faça uma cópia se quiser guardar
+os dados e remova os arquivos `fnbook.db`, `fnbook.db-wal` e `fnbook.db-shm` com a API parada.
+Na próxima inicialização, as migrações criarão o banco novamente.
 
 ## Parar
 
