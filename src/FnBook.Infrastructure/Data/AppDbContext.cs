@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<News> News => Set<News>();
+    public DbSet<Category> Categories => Set<Category>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,6 +59,16 @@ public class AppDbContext : DbContext
             entity.Property(n => n.VerifiedBy).HasColumnName("verificado_por");
             entity.Property(n => n.VerificationDate).HasColumnName("data_verificacao");
             entity.Property(n => n.Embedding).HasColumnName("embedding");
+        });
+
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.ToTable("Categoria");
+
+            entity.HasKey(c => c.Id);
+
+            entity.Property(c => c.Id).HasColumnName("categoria_id");
+            entity.Property(c => c.Name).HasColumnName("nome").HasMaxLength(100).IsRequired();
         });
     }
 }
