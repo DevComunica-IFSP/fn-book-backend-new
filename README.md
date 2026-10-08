@@ -51,3 +51,18 @@ Na próxima inicialização, as migrações criarão o banco novamente.
 ```bash
 docker compose down
 ```
+
+## Pendências
+
+Baseado na modelagem (`Modelagem dos dados.jpeg`), falta implementar:
+
+- Uf (em andamento, outro integrante)
+- Origem (em andamento, outro integrante)
+- Denuncia_Comentario
+- Notificacao
+- Fonte_Consultada
+- Noticia_Similar
+- Moderação de Comentario (endpoints de aprovar/rejeitar)
+- Hash de senha real (hoje é só Base64, não é hash)
+- Autenticação/login (JWT)
+- Migrations do EF Core (hoje usa `EnsureCreated`)
