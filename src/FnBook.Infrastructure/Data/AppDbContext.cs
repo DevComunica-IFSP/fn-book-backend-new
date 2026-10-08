@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<News> News => Set<News>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<CommentLike> CommentLikes => Set<CommentLike>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -69,6 +70,16 @@ public class AppDbContext : DbContext
 
             entity.Property(c => c.Id).HasColumnName("categoria_id");
             entity.Property(c => c.Name).HasColumnName("nome").HasMaxLength(100).IsRequired();
+        });
+
+        modelBuilder.Entity<CommentLike>(entity =>
+        {
+            entity.ToTable("Curtida_Comentario");
+
+            entity.HasKey(cl => new { cl.UserId, cl.CommentId });
+
+            entity.Property(cl => cl.UserId).HasColumnName("usuario_id");
+            entity.Property(cl => cl.CommentId).HasColumnName("comentario_id");
         });
     }
 }
