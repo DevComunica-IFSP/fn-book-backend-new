@@ -20,12 +20,10 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INewsRepository, NewsRepository>();
         services.AddScoped<INewsService, NewsService>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<ICommentLikeRepository, CommentLikeRepository>();
-        services.AddScoped<ICommentLikeService, CommentLikeService>();
-        services.AddScoped<INewsLikeRepository, NewsLikeRepository>();
-        services.AddScoped<INewsLikeService, NewsLikeService>();
+        services.AddScoped<INewsOriginRepository, NewsOriginRepository>();
+        services.AddScoped<INewsOriginService, NewsOriginService>();
+        services.AddScoped<IUfRepository, UfRepository>();
+        services.AddScoped<IUfService, UfService>();
 
         return services;
     }
