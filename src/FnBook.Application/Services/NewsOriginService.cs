@@ -10,12 +10,14 @@ public class NewsOriginService : INewsOriginService
     private readonly INewsOriginRepository _originRepository;
     private readonly INewsRepository _newsRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IUfRepository _ufRepository;
 
-    public NewsOriginService(INewsOriginRepository originRepository, INewsRepository newsRepository, IUserRepository userRepository)
+    public NewsOriginService(INewsOriginRepository originRepository, INewsRepository newsRepository, IUserRepository userRepository, IUfRepository ufRepository)
     {
         _originRepository = originRepository;
         _newsRepository = newsRepository;
         _userRepository = userRepository;
+        _ufRepository = ufRepository;
     }
 
     public async Task<IEnumerable<NewsOriginResponseDto>> GetAllAsync() =>
@@ -54,5 +56,7 @@ public class NewsOriginService : INewsOriginService
             throw new ArgumentException("Usuário não encontrado.");
         if (await _newsRepository.GetByIdAsync(newsId) is null)
             throw new ArgumentException("Notícia não encontrada.");
+        if (await _ufRepository.GetByIdAsync(ufId) is null)
+            throw new ArgumentException("UF não encontrada.");
     }
 }
