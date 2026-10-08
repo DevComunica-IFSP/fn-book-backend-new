@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<News> News => Set<News>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<CommentLike> CommentLikes => Set<CommentLike>();
+    public DbSet<NewsLike> NewsLikes => Set<NewsLike>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,6 +81,16 @@ public class AppDbContext : DbContext
 
             entity.Property(cl => cl.UserId).HasColumnName("usuario_id");
             entity.Property(cl => cl.CommentId).HasColumnName("comentario_id");
+        });
+
+        modelBuilder.Entity<NewsLike>(entity =>
+        {
+            entity.ToTable("Curtida_Noticia");
+
+            entity.HasKey(nl => new { nl.UserId, nl.NewsId });
+
+            entity.Property(nl => nl.UserId).HasColumnName("usuario_id");
+            entity.Property(nl => nl.NewsId).HasColumnName("noticia_id");
         });
     }
 }
