@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<News> News => Set<News>();
     public DbSet<NewsOrigin> NewsOrigins => Set<NewsOrigin>();
     public DbSet<Uf> Ufs => Set<Uf>();
+    public DbSet<Comment> Comments => Set<Comment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -117,6 +118,23 @@ public class AppDbContext : DbContext
 
             entity.Property(nl => nl.UserId).HasColumnName("usuario_id");
             entity.Property(nl => nl.NewsId).HasColumnName("noticia_id");
+        });
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.ToTable("Comentario");
+
+            entity.HasKey(c => c.Id);
+
+            entity.Property(c => c.Id).HasColumnName("comentario_id");
+            entity.Property(c => c.UserId).HasColumnName("usuario_id");
+            entity.Property(c => c.NewsId).HasColumnName("noticia_id");
+            entity.Property(c => c.ParentCommentId).HasColumnName("comentario_pai_id");
+            entity.Property(c => c.Text).HasColumnName("texto").IsRequired();
+            entity.Property(c => c.Date).HasColumnName("data");
+            entity.Property(c => c.Status).HasColumnName("status").HasMaxLength(50).IsRequired().HasDefaultValue("pendente");
+            entity.Property(c => c.ModeratedBy).HasColumnName("moderado_por");
+            entity.Property(c => c.ModerationDate).HasColumnName("data_moderacao");
         });
     }
 }
