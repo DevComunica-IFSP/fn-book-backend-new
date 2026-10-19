@@ -12,6 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<NewsOrigin> NewsOrigins => Set<NewsOrigin>();
     public DbSet<Uf> Ufs => Set<Uf>();
     public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<NewsLike> NewsLikes => Set<NewsLike>();
+    public DbSet<CommentLike> CommentLikes => Set<CommentLike>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
