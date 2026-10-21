@@ -12,10 +12,7 @@ public static class CommentMapping
         NewsId = comment.NewsId,
         ParentCommentId = comment.ParentCommentId,
         Text = comment.Text,
-        Date = comment.Date,
-        Status = comment.Status,
-        ModeratedBy = comment.ModeratedBy,
-        ModerationDate = comment.ModerationDate
+        Date = comment.Date
     };
 
     public static Comment ToEntity(this CreateCommentDto dto) => new()
@@ -25,10 +22,7 @@ public static class CommentMapping
         NewsId = dto.NewsId,
         ParentCommentId = dto.ParentCommentId,
         Text = dto.Text,
-        Date = DateTime.UtcNow,
-        Status = dto.Status,
-        ModeratedBy = dto.ModeratedBy,
-        ModerationDate = dto.ModerationDate
+        Date = DateTime.UtcNow
     };
 
     public static void ApplyUpdate(this Comment comment, UpdateCommentDto dto)
@@ -37,9 +31,5 @@ public static class CommentMapping
         comment.NewsId = dto.NewsId;
         comment.ParentCommentId = dto.ParentCommentId;
         comment.Text = dto.Text;
-        comment.Date = dto.Date;
-        comment.Status = dto.Status;
-        comment.ModeratedBy = dto.ModeratedBy;
-        comment.ModerationDate = dto.ModerationDate;
     }
 }
