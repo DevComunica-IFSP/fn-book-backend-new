@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
 
     public DbSet<CommentReport> CommentReports => Set<CommentReport>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<ConsultedSource> ConsultedSources => Set<ConsultedSource>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -169,6 +170,17 @@ public class AppDbContext : DbContext
             entity.Property(e => e.UpdatedAt).HasColumnName("data_atualizacao");
             entity.HasOne<User>().WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Restrict);
             entity.HasOne<Comment>().WithMany().HasForeignKey(e => e.CommentId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ConsultedSource>(entity =>
+        {
+            entity.ToTable("Fonte_Consultada");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("fonte_id");
+            entity.Property(e => e.NewsId).HasColumnName("noticia_id");
+            entity.Property(e => e.Url).HasColumnName("url").HasMaxLength(2048).IsRequired();
+            entity.Property(e => e.Summary).HasColumnName("resumo").IsRequired();
+            entity.HasOne<News>().WithMany().HasForeignKey(e => e.NewsId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

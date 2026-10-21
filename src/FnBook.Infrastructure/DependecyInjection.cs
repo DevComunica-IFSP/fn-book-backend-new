@@ -31,6 +31,8 @@ public static class DependencyInjection
         services.AddScoped<ICommentReportService, CommentReportService>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IConsultedSourceRepository, ConsultedSourceRepository>();
+        services.AddScoped<IConsultedSourceService, ConsultedSourceService>();
 
         return services;
     }
