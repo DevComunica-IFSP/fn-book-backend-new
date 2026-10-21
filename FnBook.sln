@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FnBook.Domain", "src\FnBook
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FnBook.Infrastructure", "src\FnBook.Infrastructure\FnBook.Infrastructure.csproj", "{D4E5F6A7-B8C9-0123-DEFA-234567890123}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FnBook.IntegrationTests", "tests\FnBook.IntegrationTests\FnBook.IntegrationTests.csproj", "{3EA93F28-0180-42A4-AD87-839A3D6A548B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,5 +35,9 @@ Global
 		{D4E5F6A7-B8C9-0123-DEFA-234567890123}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4E5F6A7-B8C9-0123-DEFA-234567890123}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E5F6A7-B8C9-0123-DEFA-234567890123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EA93F28-0180-42A4-AD87-839A3D6A548B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EA93F28-0180-42A4-AD87-839A3D6A548B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EA93F28-0180-42A4-AD87-839A3D6A548B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EA93F28-0180-42A4-AD87-839A3D6A548B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
