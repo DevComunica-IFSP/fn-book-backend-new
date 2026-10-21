@@ -33,6 +33,8 @@ public static class DependencyInjection
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IConsultedSourceRepository, ConsultedSourceRepository>();
         services.AddScoped<IConsultedSourceService, ConsultedSourceService>();
+        services.AddScoped<ISimilarNewsRepository, SimilarNewsRepository>();
+        services.AddScoped<ISimilarNewsService, SimilarNewsService>();
 
         return services;
     }

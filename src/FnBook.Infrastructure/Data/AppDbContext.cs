@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<CommentReport> CommentReports => Set<CommentReport>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<ConsultedSource> ConsultedSources => Set<ConsultedSource>();
+    public DbSet<SimilarNews> SimilarNews => Set<SimilarNews>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -181,6 +182,19 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Url).HasColumnName("url").HasMaxLength(2048).IsRequired();
             entity.Property(e => e.Summary).HasColumnName("resumo").IsRequired();
             entity.HasOne<News>().WithMany().HasForeignKey(e => e.NewsId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<SimilarNews>(entity =>
+        {
+            entity.ToTable("Noticia_Similar", table => table.HasCheckConstraint(
+                "CK_Noticia_Similar_Distinct", "noticia_id <> noticia_similar_id"));
+            entity.HasKey(e => new { e.NewsId, e.SimilarNewsId });
+            entity.Property(e => e.NewsId).HasColumnName("noticia_id");
+            entity.Property(e => e.SimilarNewsId).HasColumnName("noticia_similar_id");
+            entity.Property(e => e.Similarity).HasColumnName("similaridade").HasColumnType("decimal(5,4)");
+            entity.Property(e => e.Date).HasColumnName("data");
+            entity.HasOne<News>().WithMany().HasForeignKey(e => e.NewsId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<News>().WithMany().HasForeignKey(e => e.SimilarNewsId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
