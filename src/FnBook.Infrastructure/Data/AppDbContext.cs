@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
     public DbSet<NewsLike> NewsLikes => Set<NewsLike>();
     public DbSet<CommentLike> CommentLikes => Set<CommentLike>();
 
+    public DbSet<CommentReport> CommentReports => Set<CommentReport>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -138,6 +140,19 @@ public class AppDbContext : DbContext
             entity.Property(c => c.Status).HasColumnName("status").HasMaxLength(50).IsRequired().HasDefaultValue("pendente");
             entity.Property(c => c.ModeratedBy).HasColumnName("moderado_por");
             entity.Property(c => c.ModerationDate).HasColumnName("data_moderacao");
+        });
+
+        modelBuilder.Entity<CommentReport>(entity =>
+        {
+            entity.ToTable("Denuncia_Comentario");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("denuncia_id");
+            entity.Property(e => e.CommentId).HasColumnName("comentario_id");
+            entity.Property(e => e.UserId).HasColumnName("usuario_id");
+            entity.Property(e => e.Reason).HasColumnName("motivo").IsRequired();
+            entity.Property(e => e.Date).HasColumnName("data");
+            entity.HasOne<Comment>().WithMany().HasForeignKey(e => e.CommentId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<User>().WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }
