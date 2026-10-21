@@ -29,6 +29,8 @@ public static class DependencyInjection
 
         services.AddScoped<ICommentReportRepository, CommentReportRepository>();
         services.AddScoped<ICommentReportService, CommentReportService>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }
