@@ -2,6 +2,7 @@ using FnBook.Application.Interfaces;
 using FnBook.Application.Services;
 using FnBook.Domain.Interfaces;
 using FnBook.Infrastructure.Data;
+using FnBook.Infrastructure.Security;
 using FnBook.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,8 @@ public static class DependencyInjection
         services.AddScoped<IConsultedSourceService, ConsultedSourceService>();
         services.AddScoped<ISimilarNewsRepository, SimilarNewsRepository>();
         services.AddScoped<ISimilarNewsService, SimilarNewsService>();
+
+        services.AddScoped<IPasswordHashService, PasswordHashService>();
 
         return services;
     }

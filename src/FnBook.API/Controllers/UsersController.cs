@@ -45,7 +45,7 @@ public class UsersController : ControllerBase
             var user = await _userService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
         {
             return BadRequest(new { error = ex.Message });
         }
@@ -65,7 +65,7 @@ public class UsersController : ControllerBase
 
             return Ok(user);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
         {
             return BadRequest(new { error = ex.Message });
         }

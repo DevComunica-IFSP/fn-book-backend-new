@@ -1,7 +1,6 @@
 using FnBook.Application.DTOs;
 using FnBook.Application.Interfaces;
 using FnBook.Application.Mappings;
-using FnBook.Domain.Entities;
 using FnBook.Domain.Interfaces;
 
 namespace FnBook.Application.Services;
@@ -9,10 +8,12 @@ namespace FnBook.Application.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHashService _passwordHashService;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository, IPasswordHashService passwordHashService)
     {
         _userRepository = userRepository;
+        _passwordHashService = passwordHashService;
     }
 
     public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
@@ -29,11 +30,13 @@ public class UserService : IUserService
 
     public async Task<UserResponseDto> CreateAsync(CreateUserDto dto)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(dto.Password);
+
         if (await _userRepository.ExistsByEmailAsync(dto.Email))
             throw new InvalidOperationException("Email já está em uso");
 
         var user = dto.ToEntity();
-        user.PasswordHash = HashPassword(dto.Password);
+        user.PasswordHash = _passwordHashService.Hash(dto.Password);
 
         var created = await _userRepository.CreateAsync(user);
         return created.ToResponseDto();
@@ -56,10 +59,5 @@ public class UserService : IUserService
     public async Task<bool> DeleteAsync(Guid id)
     {
         return await _userRepository.DeleteAsync(id);
-    }
-
-    private static string HashPassword(string password)
-    {
-        return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
     }
 }
