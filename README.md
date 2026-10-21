@@ -89,11 +89,28 @@ aceitos pelo novo verificador; o tratamento dessas contas fica para a implementa
 
 ### Banco de dados
 
-As configurações das quatro novas entidades estão no `AppDbContext`, mas as migrations
-foram deixadas fora desta entrega. O banco existente precisa de uma migration que crie
-as novas tabelas e remova as antigas colunas de moderação de `Comentario`. A inicialização continua usando
-`MigrateAsync`; com o modelo diferente do snapshot, o EF Core pode impedir a inicialização
-até essa etapa ser realizada. Nenhum arquivo de migration ou banco existente foi alterado.
+O histórico de migrations inclui:
+
+- `RepairLegacySchema`: corrige a diferença entre os snapshots antigos e as migrations
+  executáveis. Transfere `Users` para `Usuario`, preservando IDs, senhas e os demais
+  dados existentes, atualiza a referência de `Origem` e cria `Categoria`,
+  `Curtida_Comentario` e `Curtida_Noticia`.
+- `AddPendingTables`: cria `Denuncia_Comentario`, `Notificacao`, `Fonte_Consultada` e
+  `Noticia_Similar`, com índices, chaves estrangeiras e a restrição contra uma notícia
+  ser similar a ela mesma. Remove os campos de moderação de `Comentario`.
+
+A API aplica as migrations automaticamente ao iniciar com `MigrateAsync`.
+Para aplicar manualmente ao banco configurado:
+
+```bash
+dotnet ef database update --project src/FnBook.Infrastructure --startup-project src/FnBook.API
+```
+
+As migrations anteriores foram preservadas. A atualização e o rollback são testados
+em SQLite em memória, inclusive com usuários, origens e comentários existentes.
+O rollback restaura o esquema anterior; dados de colunas ou tabelas removidas no
+rollback não são recuperados ao reaplicar as migrations. O banco local do repositório
+não é modificado pelos testes.
 
 ### Validação
 
@@ -103,7 +120,7 @@ dotnet run --project tests/FnBook.IntegrationTests
 ```
 
 Os testes de integração são um executável sem dependências adicionais de framework
-de testes. Usam SQLite em memória, criado apenas para a execução, e verificam CRUD,
+de testes. Aplicam o histórico completo de migrations em SQLite em memória e verificam CRUD,
 filtros, referências, publicação e exclusão de comentários, respostas dos controllers e hash de senha.
 Falhas encerram o processo com erro, sem alterar o banco da aplicação.
 
@@ -112,4 +129,3 @@ Falhas encerram o processo com erro, sem alterar o banco da aplicação.
 - Uf (em andamento, outro integrante)
 - Origem (em andamento, outro integrante)
 - Autenticação/login (JWT)
-- Migrations do EF Core para as novas entidades (fora do escopo desta entrega)

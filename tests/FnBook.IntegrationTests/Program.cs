@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 // Executable integration tests without additional test framework dependencies.
-// EnsureCreated is used only on this isolated in-memory database, never on application data.
+// Apply the complete migration history only to isolated in-memory databases.
 await using var connection = new SqliteConnection("Data Source=:memory:");
 await connection.OpenAsync();
 var services = new ServiceCollection();
@@ -25,8 +25,8 @@ using var provider = services.BuildServiceProvider(new ServiceProviderOptions { 
 using var scope = provider.CreateScope();
 var sp = scope.ServiceProvider;
 var db = sp.GetRequiredService<AppDbContext>();
-await db.Database.EnsureCreatedAsync();
-int assertions = 0;
+await db.Database.MigrateAsync();
+int assertions = await MigrationChecks.RunAsync();
 void Check(bool condition, string message)
 {
     if (!condition) throw new Exception(message);

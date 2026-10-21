@@ -46,14 +46,6 @@ namespace FnBook.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("data");
 
-                    b.Property<Guid?>("ModeratedBy")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("moderado_por");
-
-                    b.Property<DateTime?>("ModerationDate")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("data_moderacao");
-
                     b.Property<Guid>("NewsId")
                         .HasColumnType("TEXT")
                         .HasColumnName("noticia_id");
@@ -61,14 +53,6 @@ namespace FnBook.Infrastructure.Data.Migrations
                     b.Property<Guid?>("ParentCommentId")
                         .HasColumnType("TEXT")
                         .HasColumnName("comentario_pai_id");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue("pendente")
-                        .HasColumnName("status");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -97,6 +81,68 @@ namespace FnBook.Infrastructure.Data.Migrations
                     b.HasKey("UserId", "CommentId");
 
                     b.ToTable("Curtida_Comentario", (string)null);
+                });
+
+            modelBuilder.Entity("FnBook.Domain.Entities.CommentReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("denuncia_id");
+
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("comentario_id");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("data");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("motivo");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("usuario_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Denuncia_Comentario", (string)null);
+                });
+
+            modelBuilder.Entity("FnBook.Domain.Entities.ConsultedSource", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("fonte_id");
+
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("noticia_id");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("resumo");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NewsId");
+
+                    b.ToTable("Fonte_Consultada", (string)null);
                 });
 
             modelBuilder.Entity("FnBook.Domain.Entities.News", b =>
@@ -238,6 +284,76 @@ namespace FnBook.Infrastructure.Data.Migrations
                     b.ToTable("Origem", (string)null);
                 });
 
+            modelBuilder.Entity("FnBook.Domain.Entities.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("notificacao_id");
+
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("comentario_id");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("lida");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("quantidade");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("tipo");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("data_atualizacao");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("usuario_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notificacao", (string)null);
+                });
+
+            modelBuilder.Entity("FnBook.Domain.Entities.SimilarNews", b =>
+                {
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("noticia_id");
+
+                    b.Property<Guid>("SimilarNewsId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("noticia_similar_id");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("data");
+
+                    b.Property<decimal>("Similarity")
+                        .HasColumnType("decimal(5,4)")
+                        .HasColumnName("similaridade");
+
+                    b.HasKey("NewsId", "SimilarNewsId");
+
+                    b.HasIndex("SimilarNewsId");
+
+                    b.ToTable("Noticia_Similar", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Noticia_Similar_Distinct", "noticia_id <> noticia_similar_id");
+                        });
+                });
+
             modelBuilder.Entity("FnBook.Domain.Entities.Uf", b =>
                 {
                     b.Property<Guid>("UfId")
@@ -333,6 +449,30 @@ namespace FnBook.Infrastructure.Data.Migrations
                     b.ToTable("Usuario", (string)null);
                 });
 
+            modelBuilder.Entity("FnBook.Domain.Entities.CommentReport", b =>
+                {
+                    b.HasOne("FnBook.Domain.Entities.Comment", null)
+                        .WithMany()
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FnBook.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FnBook.Domain.Entities.ConsultedSource", b =>
+                {
+                    b.HasOne("FnBook.Domain.Entities.News", null)
+                        .WithMany()
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FnBook.Domain.Entities.NewsOrigin", b =>
                 {
                     b.HasOne("FnBook.Domain.Entities.News", null)
@@ -351,6 +491,36 @@ namespace FnBook.Infrastructure.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FnBook.Domain.Entities.Notification", b =>
+                {
+                    b.HasOne("FnBook.Domain.Entities.Comment", null)
+                        .WithMany()
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FnBook.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FnBook.Domain.Entities.SimilarNews", b =>
+                {
+                    b.HasOne("FnBook.Domain.Entities.News", null)
+                        .WithMany()
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FnBook.Domain.Entities.News", null)
+                        .WithMany()
+                        .HasForeignKey("SimilarNewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
