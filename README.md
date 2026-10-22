@@ -2,6 +2,11 @@
 
 API .NET 10 em Clean Architecture (Domain / Application / Infrastructure / API), persistência SQLite.
 
+## Referência para o frontend
+
+Consulte [todas as rotas da API](API_ROUTES.md), com exemplos de JSON, parâmetros,
+códigos HTTP e observações para integração.
+
 ## Estrutura
 
 ```
