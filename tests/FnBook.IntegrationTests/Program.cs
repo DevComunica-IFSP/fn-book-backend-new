@@ -62,6 +62,35 @@ db.News.AddRange(news, other);
 await db.SaveChangesAsync();
 var comments = sp.GetRequiredService<ICommentService>();
 var comment = await comments.CreateAsync(new CreateCommentDto { UserId = user.Id, NewsId = news.Id, Text = "Comentário" });
+// Construct these controllers through DI to cover the activation failures that
+// prevented categories and likes from being served by the API.
+var categoriesController = ActivatorUtilities.CreateInstance<CategoriesController>(sp);
+var createdCategory = (CreatedAtActionResult)await categoriesController.Create(new CreateCategoryDto { Name = "Categoria de teste" });
+var category = (CategoryResponseDto)createdCategory.Value!;
+Check(createdCategory.StatusCode == 201 && category.Name == "Categoria de teste", "Category controller activation and creation");
+Check(await categoriesController.GetById(category.Id) is OkObjectResult, "Category lookup");
+Check(((IEnumerable<CategoryResponseDto>)((OkObjectResult)await categoriesController.GetAll()).Value!).Any(c => c.Id == category.Id), "Category listed");
+var updatedCategory = (OkObjectResult)await categoriesController.Update(category.Id, new UpdateCategoryDto { Name = "Atualizada" });
+Check(((CategoryResponseDto)updatedCategory.Value!).Name == "Atualizada", "Category update");
+Check(await categoriesController.Delete(category.Id) is NoContentResult, "Category deletion");
+Check(await categoriesController.GetById(category.Id) is NotFoundResult, "Deleted category unavailable");
+
+var newsLikesController = ActivatorUtilities.CreateInstance<NewsLikesController>(sp);
+var newsLikeDto = new CreateNewsLikeDto { UserId = user.Id, NewsId = news.Id };
+Check(await newsLikesController.Create(newsLikeDto) is CreatedAtActionResult, "News like controller activation and creation");
+Check(((IEnumerable<NewsLikeResponseDto>)((OkObjectResult)await newsLikesController.GetByNews(news.Id)).Value!).Single().UserId == user.Id, "News like persisted and listed");
+Check(await newsLikesController.Create(newsLikeDto) is ConflictObjectResult, "Duplicate news like gives 409");
+Check(await newsLikesController.Delete(news.Id, user.Id) is NoContentResult, "News like deletion");
+Check(await newsLikesController.Delete(news.Id, user.Id) is NotFoundResult, "Missing news like gives 404");
+
+var commentLikesController = ActivatorUtilities.CreateInstance<CommentLikesController>(sp);
+var commentLikeDto = new CreateCommentLikeDto { UserId = user.Id, CommentId = comment.Id };
+Check(await commentLikesController.Create(commentLikeDto) is CreatedAtActionResult, "Comment like controller activation and creation");
+Check(((IEnumerable<CommentLikeResponseDto>)((OkObjectResult)await commentLikesController.GetByComment(comment.Id)).Value!).Single().UserId == user.Id, "Comment like persisted and listed");
+Check(await commentLikesController.Create(commentLikeDto) is ConflictObjectResult, "Duplicate comment like gives 409");
+Check(await commentLikesController.Delete(comment.Id, user.Id) is NoContentResult, "Comment like deletion");
+Check(await commentLikesController.Delete(comment.Id, user.Id) is NotFoundResult, "Missing comment like gives 404");
+
 var controller = new CommentsController(comments);
 db.ChangeTracker.Clear();
 Check((await comments.GetByIdAsync(comment.Id))?.Text == "Comentário", "New comment immediately available by ID");

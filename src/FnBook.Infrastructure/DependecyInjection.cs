@@ -27,6 +27,12 @@ public static class DependencyInjection
         services.AddScoped<IUfService, UfService>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<INewsLikeRepository, NewsLikeRepository>();
+        services.AddScoped<INewsLikeService, NewsLikeService>();
+        services.AddScoped<ICommentLikeRepository, CommentLikeRepository>();
+        services.AddScoped<ICommentLikeService, CommentLikeService>();
 
         services.AddScoped<ICommentReportRepository, CommentReportRepository>();
         services.AddScoped<ICommentReportService, CommentReportService>();
